@@ -106,8 +106,8 @@ fun RoundIncrementButton(
             .size(250.dp)
     ) {
         Text(
-            text = "Round Trip",
-            fontSize = 30.sp
+            text = "Lap",
+            fontSize = 50.sp
         )
     }
 }
@@ -120,7 +120,7 @@ fun Description(title: String, instructions: String, modifier: Modifier = Modifi
     ) {
         Text(
             text = title,
-            fontSize = 24.sp, // Slightly larger title
+            fontSize = 20.sp, // Slightly larger title
             lineHeight = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -199,7 +199,15 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                     )
                 }
             }
-            if (appState == AppState.Running || appState == AppState.Start) {
+            if (appState == AppState.Start) {
+                SimpleInfos(
+                    counter,
+                    elevationGain
+                )
+                RoundIncrementButton(
+                    onClick = {}
+                )
+            } else if (appState == AppState.Running) {
                 SimpleInfos(
                     counter,
                     elevationGain
