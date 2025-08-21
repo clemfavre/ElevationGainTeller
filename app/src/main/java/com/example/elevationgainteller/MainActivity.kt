@@ -13,6 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 // import androidx.compose.foundation.layout.Row // Not explicitly used in this example now
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -214,7 +215,54 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
 }
 
 @Composable
-fun SimpleInfos(counter: Int, elevationGain: Double) {}
+fun SimpleInfos(counter: Int, elevationGain: Double) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        Row(
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .align(Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                modifier = Modifier.padding(end = 10.dp),
+                text = "Laps: $counter",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = "Elevation Gain: $elevationGain m",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
+        }
+        Row(
+            modifier = Modifier.padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.padding(end = 10.dp),
+                text = "Time: 00:00",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = "Last lap: 00:00",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+        }
+    }
+}
 
 @Composable
 fun DetailedInfos(counter: Int, elevationGain: Double) {}
