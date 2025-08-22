@@ -294,38 +294,104 @@ fun DetailedInfos(counter: Int, elevationGain: Double, totalTime: String) {
 }
 
 
-@Preview(showBackground = true, name = "Start State")
-@Composable
-fun BackGroundPreview_Start() {
-    ElevationGainTellerTheme {
-        // Simulate Start state for preview
-        val tempAppState = remember { mutableStateOf(AppState.Start) }
-        val tempCounter = remember { mutableStateOf(0) }
-        val elevation = 5 * tempCounter.value
 
+@Preview(showBackground = true, name = "Start State Skeleton")
+@Composable
+fun SkeletonPreview_Start() {
+    ElevationGainTellerTheme {
         Skeleton(
-            "Welcome!",
-            "Press Start to begin."
+            initialTitle = "Welcome!",
+            initialInstructions = "Press Start to begin."
         )
-        // This preview will show the initial state.
-        // For more complex previews of different states, you might need to
-        // pass the state as a parameter to BackGround or create separate preview functions.
     }
 }
 
-@Preview(showBackground = true, name = "Running State")
+@Preview(showBackground = true, name = "Running State Skeleton")
 @Composable
-fun BackGroundPreview_Running() {
+fun SkeletonPreview_Running() {
     ElevationGainTellerTheme {
-        // To preview specific states, you'd ideally pass the state to BackGround
-        // For simplicity here, just calling it. It will default to Start.
-        // A better way for previews is to make BackGround accept an initial AppState
-        // for previewing purposes, or create a wrapper.
-        Skeleton(
-            "Activity in Progress",
-            "Press 'Round Trip' for each lap."
-        )
-        // This will still show start. See notes in the composable on how to preview states better.
+        // Simulate Running State more accurately for preview
+        var appState by remember { mutableStateOf(AppState.Running) }
+        var counter by remember { mutableStateOf(5) }
+        val elevationGain = 5.35 * counter
+        var elapsedTimeInSeconds by remember { mutableStateOf(305L) } // e.g., 05:05
+        var isTimerRunning by remember { mutableStateOf(true) }
+
+
+        // This LaunchedEffect is for the preview only to see time ticking
+        if (isTimerRunning) {
+            LaunchedEffect(Unit) {
+                while (isTimerRunning) {
+                    delay(1000L)
+                    elapsedTimeInSeconds++
+                }
+            }
+        }
+
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                Description(
+                    "Don't give up !",
+                    "Press 'Lap' for each lap. Press 'Stop' to end."
+                )
+                ActionButton(
+                    text = "Stop",
+                    onClick = { isTimerRunning = false /* appState = AppState.Stopped */ },
+                    backgroundColor = Color(0xFFF44336)
+                )
+                SimpleInfos(
+                    counter = counter,
+                    elevationGain = elevationGain,
+                    currentTime = formatTime(elapsedTimeInSeconds)
+                )
+                RoundIncrementButton(
+                    onClick = { counter++ }
+                )
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true, name = "Stopped State Skeleton")
+@Composable
+fun SkeletonPreview_Stopped() {
+    ElevationGainTellerTheme {
+        val counter = 10
+        val elevationGain = 5.35 * counter
+        val finalTimeInSeconds = 1250L // e.g., 20:50
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                Description(
+                    "Well done !",
+                    "You completed $counter round trips in ${formatTime(finalTimeInSeconds)}, gaining ${String.format("%.1f", elevationGain)} meters. Here's more detailed stats."
+                )
+                ActionButton(
+                    text = "Reset",
+                    onClick = { /* appState = AppState.Start */ },
+                    backgroundColor = Color(0xFF2196F3)
+                )
+                DetailedInfos(
+                    counter = counter,
+                    elevationGain = elevationGain,
+                    totalTime = formatTime(finalTimeInSeconds)
+                )
+            }
+        }
     }
 }
 
@@ -339,5 +405,42 @@ fun DescriptionPreview() {
             "These are some test instructions for the description component.",
             modifier = Modifier.padding(8.dp)
         )
+    }
+}
+
+@Preview(showBackground = true, name = "SimpleInfos Preview")
+@Composable
+fun SimpleInfosPreview() {
+    ElevationGainTellerTheme {
+        Surface {
+            SimpleInfos(counter = 3, elevationGain = 16.05, currentTime = "00:25")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActionButtonPreview() {
+    ElevationGainTellerTheme {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            ActionButton(text = "Start", onClick = {}, backgroundColor = Color(0xFF4CAF50))
+            ActionButton(text = "Stop", onClick = {}, backgroundColor = Color(0xFFF44336))
+            ActionButton(text = "Reset", onClick = {}, backgroundColor = Color(0xFF2196F3))
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "OneInfo Preview")
+@Composable
+fun OneInfoPreview() {
+    ElevationGainTellerTheme {
+        Surface {
+            Column(Modifier.padding(16.dp)) {
+                OneInfo(title = "Laps:", value = "10")
+                OneInfo(title = "Time:", value = "05:32")
+                OneInfo(title = "Elevation Gain:", value = "107.0 m")
+                OneInfo(title = "A much longer title to test wrapping:", value = "Short Value")
+            }
+        }
     }
 }
