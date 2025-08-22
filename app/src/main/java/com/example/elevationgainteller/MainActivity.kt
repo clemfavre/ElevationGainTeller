@@ -74,10 +74,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Skeleton(
-                        initialTitle = "",
-                        initialInstructions = ""
-                    )
+                    Skeleton()
                 }
             }
         }
@@ -153,7 +150,7 @@ fun Description(title: String, instructions: String, modifier: Modifier = Modifi
 }
 
 @Composable
-fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifier = Modifier) {
+fun Skeleton(modifier: Modifier = Modifier) {
     var appState by rememberSaveable { mutableStateOf(AppState.Start) }
 
     var elapsedTimeInSeconds by rememberSaveable { mutableStateOf(0L) }
@@ -210,7 +207,7 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                             currentLapStartTimeSeconds = 0L
                             lapTimes = emptyList()
                         },
-                        backgroundColor = Color(0xFF4CAF50) // Green
+                        backgroundColor = Color(0xFF4CAF50)
                     )
                 }
                 AppState.Running -> {
@@ -224,7 +221,7 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                             appState = AppState.Stopped
                             isTimerRunning = false
                         },
-                        backgroundColor = Color(0xFFF44336) // Red
+                        backgroundColor = Color(0xFFF44336)
                     )
                 }
                 AppState.Stopped -> {
@@ -236,9 +233,8 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                             elapsedTimeInSeconds = 0L
                             lapTimes = emptyList()
                             currentLapStartTimeSeconds = 0L
-                            // manualPointCounter = 0 // Reset if using
                         },
-                        backgroundColor = Color(0xFF2196F3) // Blue
+                        backgroundColor = Color(0xFF2196F3)
                     )
                 }
             }
@@ -322,7 +318,7 @@ fun SimpleInfos(totalLaps: Int, elevationGain: Double, currentTime: String, curr
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .fillMaxWidth() // Ensure SimpleInfos takes full width
+            .fillMaxWidth()
     ) {
         OneInfo(
             title = "Laps:",
@@ -414,94 +410,6 @@ fun DetailedInfos(totalLaps: Int, elevationGain: Double, totalTime: String, allL
                     if (index < allLapTimes.size - 1) {
                         Divider(color = Color.LightGray, thickness = 0.5.dp)
                     }
-                }
-            }
-        }
-        // Add more detailed stats like average, fastest etc. later if needed
-    }
-}
-
-// --- Previews --- (Ensure they are updated or simplified)
-
-@Preview(showBackground = true, name = "Skeleton - Start")
-@Composable
-fun SkeletonPreview_Start() {
-    ElevationGainTellerTheme {
-        Skeleton(initialTitle = "Welcome", initialInstructions = "Press Start")
-    }
-}
-
-@Preview(showBackground = true, name = "Skeleton - Running")
-@Composable
-fun SkeletonPreview_Running() {
-    // This preview will be static, showing what it looks like.
-    // For interactive previews, state needs to be hoisted or more complex setup.
-    ElevationGainTellerTheme {
-        val appState = AppState.Running
-        val counter = 2 // Represents lapTimes.size
-        val elevationGain = 5.35 * counter
-        val elapsedTimeInSeconds = 125L
-        val isTimerRunning = true
-        val lapTimes = listOf(60L, 62L)
-        val currentLapStartTimeSeconds = 122L
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Description("Activity in Progress!", "Press 'Lap' or 'Stop'.")
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                    SimpleInfos(
-                        totalLaps = lapTimes.size,
-                        elevationGain = elevationGain,
-                        currentTime = formatTime(elapsedTimeInSeconds),
-                        currentLapTime = formatTime(elapsedTimeInSeconds - currentLapStartTimeSeconds)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    LapTimesDisplay(lapTimes = lapTimes)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally){
-                    RoundIncrementButton(onClick = {})
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ActionButton(text = "Stop", onClick = {}, backgroundColor = Color(0xFFF44336))
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, name = "Skeleton - Stopped")
-@Composable
-fun SkeletonPreview_Stopped() {
-    ElevationGainTellerTheme {
-        // Static preview for stopped state
-        val lapTimes = listOf(60L, 62L, 58L)
-        val totalTime = 180L
-        val elevation = 5.35 * lapTimes.size
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Description("Activity Summary", "Completed ${lapTimes.size} laps in ${formatTime(totalTime)}, gaining ${String.format("%.1f", elevation)}m.")
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                    DetailedInfos(
-                        totalLaps = lapTimes.size,
-                        elevationGain = elevation,
-                        totalTime = formatTime(totalTime),
-                        allLapTimes = lapTimes
-                    )
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally){
-                    ActionButton(text = "Reset", onClick = {}, backgroundColor = Color(0xFF2196F3))
                 }
             }
         }
