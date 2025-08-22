@@ -169,7 +169,8 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -227,77 +228,53 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
 }
 
 @Composable
-fun SimpleInfos(counter: Int, elevationGain: Double) {
+fun OneInfo(title: String, value: String) {
     Row(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = title,
+            fontSize = 18.sp,
+            textAlign = TextAlign.Start
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = value,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start
+        )
+    }
+}
+
+@Composable
+fun SimpleInfos(counter: Int, elevationGain: Double) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth()
     )
     {
-        Column(
-            modifier = Modifier
-                .padding(bottom = 0.dp),
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 0.dp),
-                text = "Laps:",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                modifier = Modifier.padding(end = 0.dp),
-                text = "Time:",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
-            )
-            Text(
-                modifier = Modifier.padding(start = 0.dp),
-                text = "Elevation Gain:",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                modifier = Modifier.padding(start = 0.dp),
-                text = "Last lap:",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
-            )
-        }
-        Column(
-            modifier = Modifier.padding(bottom = 0.dp),
-            //horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 0.dp),
-                text = "$counter",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                modifier = Modifier.padding(end = 0.dp),
-                text = "00:00",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
-            )
-            Text(
-                modifier = Modifier.padding(start = 0.dp),
-                text = "$elevationGain m",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                modifier = Modifier.padding(start = 0.dp),
-                text = "00:00",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End
-            )
-        }
+        OneInfo(
+            title = "Laps:",
+            value = "$counter"
+        )
+        OneInfo(
+            title = "Time:",
+            value = "00:00"
+        )
+        OneInfo(
+            title = "Elevation Gain:",
+            value = "$elevationGain m"
+        )
+        OneInfo(
+            title = "Last lap:",
+            value = "00:00"
+        )
     }
 }
 
