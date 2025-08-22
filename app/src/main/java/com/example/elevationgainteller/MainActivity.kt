@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 // import androidx.compose.material3.Scaffold // Not used
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
@@ -41,12 +42,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable // For state preservation
 import androidx.compose.runtime.setValue
 import com.example.elevationgainteller.ui.theme.ElevationGainTellerTheme
+import kotlinx.coroutines.delay // Import delay
 
 // --- State Definition ---
 enum class AppState {
     Start,
     Running,
     Stopped
+}
+
+// --- Helper Function for Time Formatting ---
+fun formatTime(totalSeconds: Long): String {
+    val hours = totalSeconds / 3600
+    val minutes = (totalSeconds % 3600) / 60
+    val seconds = totalSeconds % 60
+    return if (hours > 0) {
+        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    } else {
+        String.format("%02d:%02d", minutes, seconds)
+    }
 }
 
 class MainActivity : ComponentActivity() {
@@ -59,8 +73,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Pass initial values for title and instructions if they are static
-                    // Or manage them within BackGround if they need to change with AppState
                     Skeleton(
                         initialTitle = "",
                         initialInstructions = ""
@@ -124,7 +136,7 @@ fun Description(title: String, instructions: String, modifier: Modifier = Modifi
     ) {
         Text(
             text = title,
-            fontSize = 20.sp, // Slightly larger title
+            fontSize = 20.sp,
             lineHeight = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -132,9 +144,9 @@ fun Description(title: String, instructions: String, modifier: Modifier = Modifi
         )
         Text(
             text = instructions,
-            fontSize = 16.sp, // Larger instruction text for readability
+            fontSize = 16.sp,
             lineHeight = 20.sp,
-            textAlign = TextAlign.Center, // Center instructions as well
+            textAlign = TextAlign.Center,
             modifier = Modifier
         )
     }
@@ -142,11 +154,12 @@ fun Description(title: String, instructions: String, modifier: Modifier = Modifi
 
 @Composable
 fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifier = Modifier) {
-    // val bgImage = painterResource(R.drawable.stairs) // If you add an image back
-
     var appState by rememberSaveable { mutableStateOf(AppState.Start) }
-    var counter by rememberSaveable { mutableStateOf(0) } // Preserve counter across configuration changes
+    var counter by rememberSaveable { mutableStateOf(0) }
     val elevationGain = 5.35 * counter
+
+    var elapsedTimeInSeconds by rememberSaveable { mutableStateOf(0L) }
+    var isTimerRunning by rememberSaveable { mutableStateOf(false) }
 
     // Dynamic title and instructions based on state
     val currentTitle = when (appState) {
@@ -156,21 +169,29 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
     }
     val currentInstructions = when (appState) {
         AppState.Start -> "Press on the Start button to begin your activity."
-        AppState.Running -> "Press 'Round Trip' for each lap. Press 'Stop' to end."
-        AppState.Stopped -> "You completed $counter round trips, gaining $elevationGain meters. Here's more detailed stats."
+        AppState.Running -> "Press 'Lap' for each lap. Press 'Stop' to end."
+        AppState.Stopped -> "You completed $counter round trips in ${formatTime(elapsedTimeInSeconds)}, gaining ${String.format("%.1f", elevationGain)} meters. Here's more detailed stats." // Added time to summary
+    }
+
+    // Timer Logic
+    if (isTimerRunning) {
+        LaunchedEffect(Unit) {
+            while (isTimerRunning && appState == AppState.Running) {
+                delay(1000L)
+                elapsedTimeInSeconds++
+            }
+        }
     }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-        // .paint(painter = bgImage, contentScale = ContentScale.Crop) // Example if using background image
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .fillMaxWidth(),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -182,15 +203,23 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                 AppState.Start -> {
                     ActionButton(
                         text = "Start",
-                        onClick = { appState = AppState.Running },
-                        backgroundColor = Color(0xFF4CAF50) // Green
+                        onClick = {
+                            appState = AppState.Running
+                            isTimerRunning = true
+                            elapsedTimeInSeconds = 0L
+                            counter = 0
+                        },
+                        backgroundColor = Color(0xFF4CAF50)
                     )
                 }
                 AppState.Running -> {
                     ActionButton(
                         text = "Stop",
-                        onClick = { appState = AppState.Stopped },
-                        backgroundColor = Color(0xFFF44336) // Red
+                        onClick = {
+                            appState = AppState.Stopped
+                            isTimerRunning = false
+                        },
+                        backgroundColor = Color(0xFFF44336)
                     )
                 }
                 AppState.Stopped -> {
@@ -198,61 +227,69 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
                         text = "Reset",
                         onClick = {
                             appState = AppState.Start
-                            counter = 0 // Reset counter when going back to Start
+                            isTimerRunning = false
+                            elapsedTimeInSeconds = 0L
+                            counter = 0
                         },
-                        backgroundColor = Color(0xFF2196F3) // Blue
+                        backgroundColor = Color(0xFF2196F3)
                     )
                 }
             }
             if (appState == AppState.Start) {
                 SimpleInfos(
-                    counter,
-                    elevationGain
+                    counter = counter,
+                    elevationGain = elevationGain,
+                    currentTime = formatTime(elapsedTimeInSeconds)
                 )
                 RoundIncrementButton(
                     onClick = {}
                 )
             } else if (appState == AppState.Running) {
                 SimpleInfos(
-                    counter,
-                    elevationGain
+                    counter = counter,
+                    elevationGain = elevationGain,
+                    currentTime = formatTime(elapsedTimeInSeconds)
                 )
                 RoundIncrementButton(
                     onClick = { counter++ }
                 )
             } else if (appState == AppState.Stopped) {
-                DetailedInfos(counter, elevationGain)
+                DetailedInfos(
+                    counter = counter,
+                    elevationGain = elevationGain,
+                    totalTime = formatTime(elapsedTimeInSeconds)
+                )
             }
         }
     }
 }
 
 @Composable
-fun OneInfo(title: String, value: String) {
+fun OneInfo(title: String, value: String, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.weight(1f),
             text = title,
             fontSize = 18.sp,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1f)
         )
         Text(
-            modifier = Modifier.weight(1f),
             text = value,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1f)
         )
     }
 }
 
 @Composable
-fun SimpleInfos(counter: Int, elevationGain: Double) {
+fun SimpleInfos(counter: Int, elevationGain: Double, currentTime: String) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -265,7 +302,7 @@ fun SimpleInfos(counter: Int, elevationGain: Double) {
         )
         OneInfo(
             title = "Time:",
-            value = "00:00"
+            value = currentTime
         )
         OneInfo(
             title = "Elevation Gain:",
