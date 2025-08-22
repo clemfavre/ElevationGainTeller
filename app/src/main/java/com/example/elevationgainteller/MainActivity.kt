@@ -269,7 +269,7 @@ fun SimpleInfos(counter: Int, elevationGain: Double) {
         )
         OneInfo(
             title = "Elevation Gain:",
-            value = "$elevationGain m"
+            value = "${String.format("%.1f", elevationGain)} m"
         )
         OneInfo(
             title = "Last lap:",
