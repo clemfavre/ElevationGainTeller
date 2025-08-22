@@ -2,6 +2,7 @@ package com.example.elevationgainteller
 
 import android.os.Bundle
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,12 +81,13 @@ fun ActionButton( // A more generic button for Start, Stop, Reset
 ) {
     Button(
         onClick = onClick,
-        shape = CircleShape,
+        shape = RoundedCornerShape(percent = 50),
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
             contentColor = contentColor
         ),
-        modifier = modifier.size(150.dp) // A bit smaller than the round trip button
+        modifier = modifier
+            .size(width = 150.dp, height = 60.dp)
     ) {
         Text(text = text, fontSize = 24.sp, textAlign = TextAlign.Center)
     }
@@ -224,46 +228,71 @@ fun Skeleton(initialTitle: String, initialInstructions: String, modifier: Modifi
 
 @Composable
 fun SimpleInfos(counter: Int, elevationGain: Double) {
-    Column(
+    Row(
         modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .align(Alignment.CenterHorizontally),
-            horizontalArrangement = Arrangement.Start
+                .padding(bottom = 0.dp),
         ) {
             Text(
-                modifier = Modifier.padding(end = 10.dp),
-                text = "Laps: $counter",
+                modifier = Modifier.padding(end = 0.dp),
+                text = "Laps:",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start
             )
             Text(
-                modifier = Modifier.padding(start = 10.dp),
-                text = "Elevation Gain: $elevationGain m",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
-        }
-        Row(
-            modifier = Modifier.padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 10.dp),
-                text = "Time: 00:00",
+                modifier = Modifier.padding(end = 0.dp),
+                text = "Time:",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End
             )
             Text(
-                modifier = Modifier.padding(start = 10.dp),
-                text = "Last lap: 00:00",
+                modifier = Modifier.padding(start = 0.dp),
+                text = "Elevation Gain:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                modifier = Modifier.padding(start = 0.dp),
+                text = "Last lap:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+        }
+        Column(
+            modifier = Modifier.padding(bottom = 0.dp),
+            //horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                modifier = Modifier.padding(end = 0.dp),
+                text = "$counter",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                modifier = Modifier.padding(end = 0.dp),
+                text = "00:00",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
+            )
+            Text(
+                modifier = Modifier.padding(start = 0.dp),
+                text = "$elevationGain m",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                modifier = Modifier.padding(start = 0.dp),
+                text = "00:00",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End
