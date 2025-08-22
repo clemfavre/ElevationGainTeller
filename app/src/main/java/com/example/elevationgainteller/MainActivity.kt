@@ -279,7 +279,20 @@ fun SimpleInfos(counter: Int, elevationGain: Double) {
 }
 
 @Composable
-fun DetailedInfos(counter: Int, elevationGain: Double) {}
+fun DetailedInfos(counter: Int, elevationGain: Double, totalTime: String) {
+    Column(
+        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Detailed Statistics", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+        Text("Total Laps: $counter")
+        Text("Total Time: $totalTime")
+        Text("Total Elevation Gain: ${String.format("%.1f", elevationGain)} m")
+        Text("Average Lap Time: could be interesting if enough time")
+        Text("Fastest Lap: could be interesting if enough time")
+    }
+}
+
 
 @Preview(showBackground = true, name = "Start State")
 @Composable
