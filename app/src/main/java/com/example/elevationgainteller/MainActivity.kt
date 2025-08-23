@@ -200,48 +200,6 @@ fun Skeleton(modifier: Modifier = Modifier) {
                 title = currentTitle,
                 instructions = currentInstructions
             )
-            when (appState) {
-                AppState.Start -> {
-                    ActionButton(
-                        text = "Start",
-                        onClick = {
-                            appState = AppState.Running
-                            isTimerRunning = true
-                            elapsedTimeInSeconds = 0L
-                            currentLapStartTimeSeconds = 0L
-                            lapTimes = emptyList()
-                        },
-                        backgroundColor = Color(0xFF4CAF50)
-                    )
-                }
-                AppState.Running -> {
-                    ActionButton(
-                        text = "Stop",
-                        onClick = {
-                            if (isTimerRunning && elapsedTimeInSeconds > currentLapStartTimeSeconds) {
-                                val finalLapDuration = elapsedTimeInSeconds - currentLapStartTimeSeconds
-                                lapTimes = lapTimes + finalLapDuration
-                            }
-                            appState = AppState.Stopped
-                            isTimerRunning = false
-                        },
-                        backgroundColor = Color(0xFFF44336)
-                    )
-                }
-                AppState.Stopped -> {
-                    ActionButton(
-                        text = "Reset",
-                        onClick = {
-                            appState = AppState.Start
-                            isTimerRunning = false
-                            elapsedTimeInSeconds = 0L
-                            lapTimes = emptyList()
-                            currentLapStartTimeSeconds = 0L
-                        },
-                        backgroundColor = Color(0xFF2196F3)
-                    )
-                }
-            }
 
             // SimpleInfos and LapTimesDisplay
             Column(
@@ -266,6 +224,17 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                         colors = TextFieldDefaults.colors()
                     )
+                    ActionButton(
+                        text = "Start",
+                        onClick = {
+                            appState = AppState.Running
+                            isTimerRunning = true
+                            elapsedTimeInSeconds = 0L
+                            currentLapStartTimeSeconds = 0L
+                            lapTimes = emptyList()
+                        },
+                        backgroundColor = Color(0xFF4CAF50)
+                    )
                     SimpleInfos(
                         totalLaps = lapTimes.size,
                         elevationGain = 0.0,
@@ -276,6 +245,18 @@ fun Skeleton(modifier: Modifier = Modifier) {
                     LapTimesDisplay(lapTimes = lapTimes)
 
                 } else if (appState == AppState.Running) {
+                    ActionButton(
+                        text = "Stop",
+                        onClick = {
+                            if (isTimerRunning && elapsedTimeInSeconds > currentLapStartTimeSeconds) {
+                                val finalLapDuration = elapsedTimeInSeconds - currentLapStartTimeSeconds
+                                lapTimes = lapTimes + finalLapDuration
+                            }
+                            appState = AppState.Stopped
+                            isTimerRunning = false
+                        },
+                        backgroundColor = Color(0xFFF44336)
+                    )
                     SimpleInfos(
                         totalLaps = lapTimes.size,
                         elevationGain = elevationGain,
@@ -290,6 +271,17 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         elevationGain = elevationGain,
                         totalTime = formatTime(elapsedTimeInSeconds),
                         allLapTimes = lapTimes
+                    )
+                    ActionButton(
+                        text = "Reset",
+                        onClick = {
+                            appState = AppState.Start
+                            isTimerRunning = false
+                            elapsedTimeInSeconds = 0L
+                            lapTimes = emptyList()
+                            currentLapStartTimeSeconds = 0L
+                        },
+                        backgroundColor = Color(0xFF2196F3)
                     )
                 }
             }
