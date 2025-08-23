@@ -195,11 +195,6 @@ fun Skeleton(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            // Description and Start/Stop/Reset button
-            Description(
-                title = currentTitle,
-                instructions = currentInstructions
-            )
 
             // SimpleInfos and LapTimesDisplay
             Column(
@@ -207,6 +202,14 @@ fun Skeleton(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
+                // Description and Start/Stop/Reset button
+                Description(
+                    title = currentTitle,
+                    instructions = currentInstructions
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 if (appState == AppState.Start) {
                     OutlinedTextField(
                         value = elevationFactorString,
