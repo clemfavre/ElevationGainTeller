@@ -227,6 +227,9 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                         colors = TextFieldDefaults.colors()
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     ActionButton(
                         text = "Start",
                         onClick = {
@@ -238,6 +241,9 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         },
                         backgroundColor = Color(0xFF4CAF50)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     SimpleInfos(
                         totalLaps = lapTimes.size,
                         elevationGain = 0.0,
@@ -248,6 +254,7 @@ fun Skeleton(modifier: Modifier = Modifier) {
                     LapTimesDisplay(lapTimes = lapTimes)
 
                 } else if (appState == AppState.Running) {
+                    Spacer(modifier = Modifier.height(115.dp))
                     ActionButton(
                         text = "Stop",
                         onClick = {
@@ -260,13 +267,18 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         },
                         backgroundColor = Color(0xFFF44336)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     SimpleInfos(
                         totalLaps = lapTimes.size,
                         elevationGain = elevationGain,
                         currentTime = formatTime(elapsedTimeInSeconds),
                         currentLapTime = formatTime(if (isTimerRunning) elapsedTimeInSeconds - currentLapStartTimeSeconds else 0L)
                     )
+
                     Spacer(modifier = Modifier.height(16.dp))
+
                     LapTimesDisplay(lapTimes = lapTimes)
                 } else if (appState == AppState.Stopped) {
                     DetailedInfos(
@@ -275,6 +287,9 @@ fun Skeleton(modifier: Modifier = Modifier) {
                         totalTime = formatTime(elapsedTimeInSeconds),
                         allLapTimes = lapTimes
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     ActionButton(
                         text = "Reset",
                         onClick = {
