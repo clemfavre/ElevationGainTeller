@@ -171,9 +171,9 @@ fun Skeleton(modifier: Modifier = Modifier) {
         AppState.Stopped -> "Well done !"
     }
     val currentInstructions = when (appState) {
-        AppState.Start -> "Press on the Start button to begin your activity."
-        AppState.Running -> "Press 'Lap' for each lap. Press 'Stop' to end."
-        AppState.Stopped -> "You completed ${lapTimes.size} round trips in ${formatTime(elapsedTimeInSeconds)}, gaining ${String.format("%.1f", elevationGain)} meters. Here's more detailed stats." // Added time to summary
+        AppState.Start -> "Set the elevation gain for one lap in the text field below and press 'Start' to start your activity."
+        AppState.Running -> "Press 'Lap' button each time you completed one lap. Press 'Stop' to end activity."
+        AppState.Stopped -> "Great job ! Here's a bit more detailed stats."
     }
 
     if (isTimerRunning) {
@@ -417,6 +417,9 @@ fun DetailedInfos(totalLaps: Int, elevationGain: Double, totalTime: String, allL
         OneInfo(title = "Total Laps:", value = "$totalLaps")
         OneInfo(title = "Total Time:", value = totalTime)
         OneInfo(title = "Total Elevation:", value = "${String.format("%.1f", elevationGain)} m")
+        OneInfo(title = "Fastest Lap:", value = "Lap ${allLapTimes.indexOf(allLapTimes.min())+1}: ${allLapTimes.min()} s")
+        OneInfo(title = "Longest Lap:", value = "Lap ${allLapTimes.indexOf(allLapTimes.max())+1}: ${allLapTimes.max()} s")
+        OneInfo(title = "Average Lap:", value = "${String.format("%.1f", allLapTimes.average())} s")
 
         if (allLapTimes.isNotEmpty()) {
             Spacer(modifier = Modifier.height(12.dp))
