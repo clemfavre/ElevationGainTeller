@@ -2,25 +2,22 @@ package com.example.elevationgainteller
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import com.example.elevationgainteller.ui.theme.ElevationGainTellerTheme
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
-// Other imports remain the same
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,10 +28,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -43,10 +43,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.elevationgainteller.ui.theme.ElevationGainTellerTheme
 import kotlinx.coroutines.delay
 
 // --- State Definition ---
@@ -159,7 +160,10 @@ fun Skeleton(modifier: Modifier = Modifier) {
     var lapTimes by rememberSaveable { mutableStateOf(listOf<Long>()) }
     var currentLapStartTimeSeconds by rememberSaveable { mutableStateOf(0L) }
 
-    val elevationGain = 5.20 * lapTimes.size
+    var elevationFactorString by rememberSaveable { mutableStateOf("5.20") }
+
+    val currentFactor = elevationFactorString.toDoubleOrNull() ?: 5.20
+    val elevationGain = currentFactor * lapTimes.size
 
     val currentTitle = when (appState) {
         AppState.Start -> "Welcome to ElevationGainTeller !"
@@ -245,12 +249,38 @@ fun Skeleton(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
-                if (appState == AppState.Running || appState == AppState.Start) {
+                if (appState == AppState.Start) {
+                    OutlinedTextField(
+                        value = elevationFactorString,
+                        onValueChange = { newValue ->
+                            if (newValue.isEmpty() || newValue.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                                elevationFactorString = newValue
+                            }
+                        },
+                        label = { Text("Elevation per Lap (m)") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier
+                            .fillMaxWidth(0.6f)
+                            .padding(bottom = 16.dp),
+                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                        colors = TextFieldDefaults.colors()
+                    )
+                    SimpleInfos(
+                        totalLaps = lapTimes.size,
+                        elevationGain = 0.0,
+                        currentTime = formatTime(elapsedTimeInSeconds),
+                        currentLapTime = formatTime(0L)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    LapTimesDisplay(lapTimes = lapTimes)
+
+                } else if (appState == AppState.Running) {
                     SimpleInfos(
                         totalLaps = lapTimes.size,
                         elevationGain = elevationGain,
                         currentTime = formatTime(elapsedTimeInSeconds),
-                        currentLapTime = formatTime(if (isTimerRunning && appState == AppState.Running) elapsedTimeInSeconds - currentLapStartTimeSeconds else 0L)
+                        currentLapTime = formatTime(if (isTimerRunning) elapsedTimeInSeconds - currentLapStartTimeSeconds else 0L)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     LapTimesDisplay(lapTimes = lapTimes)
