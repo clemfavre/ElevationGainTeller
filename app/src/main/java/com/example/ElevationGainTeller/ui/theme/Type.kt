@@ -1,4 +1,4 @@
-package com.example.elevationgainteller.ui.theme
+package com.example.ElevationGainTeller.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

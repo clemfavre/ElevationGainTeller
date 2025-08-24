@@ -1,6 +1,5 @@
-package com.example.elevationgainteller.ui.theme
+package com.example.ElevationGainTeller.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.elevationgainteller"
+    namespace = "io.github.clemfavre.ElevationGainTeller"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.elevationgainteller"
+        applicationId = "io.github.clemfavre.ElevationGainTeller"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

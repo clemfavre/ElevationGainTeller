@@ -1,4 +1,4 @@
-package com.example.elevationgainteller
+package com.example.ElevationGainTeller
 
 import org.junit.Test
 

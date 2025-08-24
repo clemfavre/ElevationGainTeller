@@ -1,4 +1,4 @@
-package com.example.elevationgainteller
+package com.example.ElevationGainTeller
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -47,7 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.elevationgainteller.ui.theme.ElevationGainTellerTheme
+import com.example.ElevationGainTeller.ui.theme.ElevationGainTellerTheme
 import kotlinx.coroutines.delay
 
 // --- State Definition ---
