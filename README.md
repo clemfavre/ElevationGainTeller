@@ -8,5 +8,7 @@ Press Lap to indicate you just finished one lap. You can see some statistics dur
 Press Stop to finish your activity and see more detailed statistics.  
 Press Reset to come back to the original screen.  
 
-## 🎥 Small demo
-[Download the demo video](demo_video.mp4)  
+## Some screenshots
+![Setting the elevation gain of one lap](demo/demo_start_pic.png)
+![Running](demo/demo_stop_pic.png)
+![Looking at the statistics](demo/demo_reset_pic.png)
