@@ -8,5 +8,5 @@ Press Lap to indicate you just finished one lap. You can see some statistics dur
 Press Stop to finish your activity and see more detailed statistics.  
 Press Reset to come back to the original screen.  
 
-# 🎥 Small demo
-[Download the demo video](demo/video.mp4)  
+## 🎥 Small demo
+[Download the demo video](video.mp4)  
