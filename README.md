@@ -9,4 +9,4 @@ Press Stop to finish your activity and see more detailed statistics.
 Press Reset to come back to the original screen.  
 
 ## 🎥 Small demo
-[Download the demo video](video.mp4)  
+[Download the demo video](demo_video.mp4)  
